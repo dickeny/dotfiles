@@ -1,0 +1,8 @@
+#!/bin/bash
+
+[ "$1" = "" ] && echo "Usage: $(basename $0) DIR/FILE ..." && exit
+
+for dir in "$@"; do
+    find "$dir" -iname "*.mp3" -execdir mid3iconv -e gbk --remove-v1 "{}" \; 
+done
+

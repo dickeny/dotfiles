@@ -1,0 +1,55 @@
+#!/bin/bash
+#FILE: ~/bin/tw
+#DATE: 2010-04-15 23:50:28
+# A simple client for twitter
+
+N=8
+#SITE="api.twitter.com/"
+SITE="dickeny.appspot.com/text"
+curl_opts="--silent --netrc" # --socks4 127.0.0.1:3128"
+
+usage() {
+    echo -e "用法："
+    echo -e "\t$(basename $0) TWEET                 \t发表新推"
+    echo -e "\t$(basename $0) -f|--friends [N=$N]   \t显示关注推友的更新（默认$N条）"
+    echo -e "\t$(basename $0) @|-m|--mentions [N=$N]\t显示提到自己的推言（默认$N条）"
+    echo -e "\t$(basename $0) -l|--list [USER=me]   \t显示USER更新的推言（默认为自己）"
+    #echo -e "\t$(basename $0) -H|--home            \t显示自己主页的推言"
+    exit 0
+}
+
+put_tweets() {
+    val=0
+    msg="$@"
+    url="http://${SITE}/statuses/update.xml"
+    (curl $curl_opts -d "status=$msg" "$url"; val="$?") | grep -vq '<error'
+    exit $val
+}
+
+get_tweets() {
+    echo "$1"
+    reg='s@^\(.*\)</text>.*<name>\(.*\)</name><screen_name>\(.*\)</screen_name>.*$@\\\e[34m\2(\3)\\e[0m:\n\t\1@p'
+    tweets=$(curl $curl_opts "$1" | sed 's/<text>/\n/g' | sed -n "$reg" | sed 's/\(@[a-zA-Z_][a-zA-Z0-9_]*\)/\\e[35m\1\\e[0m/g')
+    echo -e "$tweets"
+}
+
+case "$1" in
+    ""|-h|--help)   usage ;;
+    -f|--friends)
+        url="http://${SITE}/statuses/friends_timeline.xml"
+        [ "$2" != "" ] && url="${url}?count=$2" || url="${url}?count=$N"
+        ;;
+    @|-m|--mentions)
+        url="http://${SITE}/statuses/mentions.xml"
+        [ "$2" != "" ] && url="${url}?count=$2" || url="${url}?count=$N"
+        ;;
+    -l|--list)
+        url="http://${SITE}/statuses/user_timeline.xml"
+        [ "$2" != "" ] && url="${url}?screen_name=$2"
+        ;;
+    #-H|--home)      url="http://${SITE}/statuses/home_timeline.xml" ;;
+    *)              put_tweets "$@" ;;
+esac
+
+get_tweets "$url" "$2"
+

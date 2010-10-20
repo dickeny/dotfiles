@@ -1,0 +1,110 @@
+#!/bin/bash
+
+# A brief desktop pop-alarm function
+#------------------------------------
+function getkenv {
+    echo `cat "/proc/$(pidof kded4)/environ" | tr '\0' '\n'`
+}
+
+function alarm {
+    _title_="来自命令行的提示"
+    _message_="注意！！这是一个提示！！"
+    _timeout_=10
+
+    [ "$1" != "" ] &&  _message_="$1"
+    [ "$2" != "" ] &&  _title_="$2"
+    [ "$3" != "" ] &&  _timeout_=$3
+
+    test "$DISPLAY" || export `cat "/proc/$(pidof kded)/environ" | tr '\0' '\n' | grep DISPLAY` >/dev/null
+    #export `cat "/proc/$(pidof kded)/environ" | tr '\0' '\n' | grep DBUS`
+    if [[ "$DISPLAY" != "" ]]; then
+        kdialog --title "${_title_}" --passivepopup "${_message_}" ${_timeout_}
+    else
+        echo "${_message_}"
+    fi
+}
+
+dg_curl_opts="--silent --netrc"
+# micro blog functions
+#------------------------------------
+function ub {
+    msg="$@"
+    echo -n "sending to Digu    ... " && dg "$msg" && echo "OK" || echo "Fail."
+    echo -n "sending to Douban  ... " && db "$msg" && echo "OK" || echo "Fail."
+    echo -n "sending to Twitter ... " && tw "$msg" && echo "OK" || echo "Fail."
+}
+
+# Digu functions
+#------------------------------------
+function dg {
+    msg="$@"
+    url='http://api.minicloud.com.cn/statuses/update.xml'
+    curl $dg_curl_opts --data-urlencode "content=$msg" "$url" | grep -vq '<error>'
+}
+
+function dl {
+    url='http://api.minicloud.com.cn/statuses/friends_timeline.xml'
+    reg='s@^\(.*\)</text>.*<name>\(.*\)</name><screen_name>\(.*\)</screen_name>.*$@\\e[34m\3(\2)\\e[0m:\n\t\1@p'
+    test "x$1" != "x" && url="http://api.minicloud.com.cn/statuses/user_timeline.xml?userIdOrName=$1"
+    test "$1" == "public" && url="http://api.minicloud.com.cn/statuses/public_timeline.xml?"
+    msg=$(curl $dg_curl_opts "$url" | sed 's/<text>/\n/g' | sed -n "$reg" | head -n 20)
+    msg=$(echo "$msg" | sed 's/\(@[^ ]*\)/\\e[34m@\1\\e0m/g')
+    echo -e "$msg"
+}
+
+function db {
+    url="http://www.douban.com/people/dickeny/miniblogs"
+    msg="$@"
+    cookies='Cookie:bid="3nDziOdcrmY"; __utma=30149280.184223455.1270309572.1272169396.1273996953.6; __utmz=30149280.1273997380.6.4.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=%E4%BB%8Eping.fm%20%E5%90%8C%E6%AD%A5%E5%88%B0%E8%B1%86%E7%93%A3; viewed="1297009_1467239"; ue="dickeny@gmail.com"; __utmv=30149280.3202; f=content; ll="None"; __utmb=30149280.49.10.1273996953; __utmc=30149280; dbcl2="32027932:hCug9mBLO/w"; ck="FqNK"; report='
+    curl -s -H "$cookies" -d 'ck=FqNK' -d 'mb_submit=我说' -d "mb_text=$msg" "$url" > /dev/null
+    curl -s "$url" | grep -q "$msg"
+}
+
+function mplayer {
+    option=""
+    for file in "$@"; do
+        [ -f "$file" ] && break
+    done
+    if [ -f "$file" ]; then   # 匹配字幕
+        name=${file%.*}
+        # 检测srt字幕
+        sub=$(find *.srt 2>/dev/null | grep -F "$name" | head -n1)
+        [ -f "${name}.chs.srt" ] && sub="${name}.chs.srt"
+        if [ "$sub" != "" ]; then
+            option="-sub "$sub" -subcp enca:zh:cp936"
+        else
+            # 检测idx/sub字幕
+            sub=$(find *.idx 2>/dev/null | grep -F "$name" | head -n1)
+            [ -f "${name}.chs.idx" ] && sub="${name}.chs.idx"
+            [ "$sub" != "" ] && option="-vobsub "${sub%.idx}" "
+        fi
+    fi
+    $(which mplayer) $option "$@"
+}
+
+# Mldonkey command interface
+# =============================
+function mlcmd {
+# To run this program, you need the nc (netcat) program
+# MLdonkey's default user is 'admin', no passwd.
+# If you do not set passwd, leave them empty.
+MLUSER=
+MLPASSWD=
+
+[ ! -z $MLUSER ] && AUTH_INFO="auth $MLUSER $MLPASSWD"
+[ "x$1" = "x" ] && echo "Usage: mlcmd help" && return $?
+
+nc 127.0.0.1 4000 <<_EOF
+$AUTH_INFO
+$@
+q
+_EOF
+echo "quit."
+}
+
+function gfind {
+    site="oss.ustc.edu.cn/gentoo/distfiles/"
+    echo "Trying to search '$@' at $site ..."
+    lftp -c "open $site && ls '*$@*'" | awk "{print \"http://$site\"\$NF}"
+}
+

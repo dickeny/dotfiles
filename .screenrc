@@ -1,0 +1,83 @@
+# ~/.screenrc
+# 
+# 最后更新：2009-12-16 21:05:19
+#
+# 基础设置
+altscreen on
+startup_message off         # 别显示首页版权信息唉
+defscrollback 5000          # 滚屏缓存设置得大一些
+vbell off                    # 别使用主板的beep声唉
+autodetach on               # 网络掉线时，自动detach
+#escape ``                   # 将Ctrl-A 替换为 ` 键
+                            # 便于特殊终端（如手机）进行控制
+                            # （原本这个键，输入两次才算是输入）
+# 快捷按键绑定
+#bindkey -k k4 kill          # F4 ：关闭当前的窗口
+bindkey -k k7 prev          # F7 ：切换到前一个窗口
+bindkey -k k8 next          # F8 ：切换到后一个窗口
+#bindkey -k k; screen        # F9 ：新建一个窗口
+
+#
+# 如何获取 bindkey 时的键值？
+# 打开 vim，开始插入模式，按Ctrl-v，然后按你的快捷键，vim就会帮你输入对应键值。
+# Open vim, then go insert mode, Ctrl-v YOURKEY , and that's key-code
+
+# ------
+# Shift + left/right to explorer tabs
+#bindkey "^[[1;2D" prev
+#bindkey "^[[1;2C" next
+#bindkey "Od" prev
+#bindkey "Oc" next
+
+# Shift + PgUp/PgDn to explorer buffer history
+#bindkey "^[[5;2~" eval "copy" "stuff ^b"
+#bindkey -m "^[[5;2~" stuff ^b 
+#bindkey -m "^[[6;2~" stuff ^f
+
+# 自动打开若干个窗口
+screen 2
+screen 1
+screen 0
+
+# 模拟支持 $TERMCAP
+termcapinfo  * '' 'hs:ts=\E_:fs=\E\\:ds=\E_\E\\'
+termcapinfo xterm* ti@:te@   #enable SHIFT-PGUP / SHIFT-PGDOWN scroll
+
+# 设置屏幕下方的状态/标题栏
+caption always              # 总是显示下面的状态标题栏
+# 推荐版。
+caption string '%{= kg}[%{G}%H:%{m}%l%{g}][%= %{w}%-Lw%{+b r}(%{y}%n %t(%u)%{r})%{= w}%+Lw%=%{g}][%{B} %m-%d %{W}%0c %{g}]'
+# 无颜色版 。
+#caption string '[%H][%= %-Lw(%n %t(%u))%+Lw %=][ %m-%d %0c]'
+# 其他版本。
+#caption string "%{= gk}%-Lw%{= rW}%50> %n%f* %t %{-}%+Lw%< %= %{= Gk} %H %{= rW} %l %{= Gk} %0c:%s %d/%m %{-}"
+
+# 
+# %{= ab}   设置颜色a为背景色，颜色b为前景色（字符的颜色）
+# %{+b ab}  加粗！（类似 %{= ab}）
+# %{c}      设置颜色c为前景色（字符的颜色）
+# 颜色代码：小写字母为浅色，大写字母为亮色
+#       g = green   （绿色）    k = black   （黑色）
+#       b = blue    （蓝色）    r = red     （红色）
+#       w = white   （白色）    y = yellow  （黄色)
+#       m = pink    （粉红）
+#
+# 参数代码:
+#       %D      输入法状态? dictionary?
+#       %H      主机名      host name
+#       %t      窗口标题    title
+#       %n      窗口序号    number
+#       %l      平均负载    load average
+#       %u      ???
+#       %y      年          year
+#       %m      月          month
+#       %d      日          day
+#       %c      当前时间    current time
+#
+# %=        动态占用空白（padding）
+# %-w       列出前面的窗口 list window forward
+# %+w       列出后面的窗口 list window backward
+# %-Lw      带格式列出前面的窗口
+# %+Lw      带格式列出后面的窗口
+#
+

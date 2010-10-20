@@ -1,0 +1,53 @@
+#!/bin/bash
+
+wap="http://wap.niepo.com/wap/book/"
+#wap="http://wap.bingdi.com/wap/book/"
+#wap="http://wap.feiku.com/wap/book/"
+url="$wap/SearchList.aspx?lmid=0&uid=264199&ups=7b32e2bf1ff3c814&c=1"
+readme="用法：$(basename "$0") 书名\n说明：这是一个从飞库网站搜索并下载小说的工具。"
+test "x$1" == "x" && echo -e "$readme" && exit 0
+key="$1"
+
+# 搜索
+echo "正在搜索 $key ..."
+val=$(curl -s "$url" --data-urlencode "t=$key" | grep "Show.aspx")
+if [ "$?" != "0" ]; then
+    echo "找不到相关书目。"
+    exit 0
+fi
+
+links=$(echo "$val" | tr '"' '\n' | grep "Show.aspx" | sed 's/\&amp;/\&/g' | sed 's/Show.aspx/Txt.aspx/g')
+books=$(echo "$val" | sed 's@^.*>\(.*\)</a.*$@\1@')
+n=$(echo "$books" | wc -l)
+
+# 选择
+if [ "$n" != "1" ]; then
+    echo "候选："
+    echo "$books" | nl
+    echo -n "请输入序号："
+    read num
+    num=$(echo "$num" | grep -v "[a-zA-Z]")
+    ([ "$num" = "" ] || [ $num -lt 1 ] || [ $num -gt $n ]) && exit 0
+else
+    echo "找到书目：$books"
+    num=1
+fi
+
+# 解析下载链接
+echo "正在解析下载链接。。。"
+link=$(echo "$links"|head -n "$num" | tail -n 1)
+url=$(curl -s "$wap$link" | tr '"' '\n' | grep "[0-9].zip")
+echo "url: $url"
+
+# 下载
+wget -c "$url"
+
+# 解压
+echo 正在解压缩文件...
+file=$(basename $url)
+name=$(echo "$books"|head -n "$num" | tail -n 1)
+name=${name/《}
+name=${name/》*}
+unzip -q $file && rm $file && mv ${file/zip/txt} $name.txt
+echo "下载完毕。文件是 $PWD/$name.txt"
+

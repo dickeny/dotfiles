@@ -1,0 +1,65 @@
+#!/bin/bash
+
+ACTION="detect"
+TARGET="UTF-8"
+CODECS="UTF-8 GB18030 GBK BIG5 EUC-CN EUC-TW UTF-16"
+VERSION="2010-04-21"
+APPNAME="$(basename $0)"
+
+usage(){
+    echo -e "用法: $APPNAME [参数] 文件名 [文件名2] ...."
+    echo -e "   自动检测并将所给文件的编码转换为${TARGET}。"
+    echo
+    echo -e "参数列表:"
+    echo -e "   -f CODECS   尝试CODECS中的编码。[默认值: \"$CODECS\"]"
+    echo -e "   -t CODEC    转换为CODEC编码。[默认值:${TARGET}]"
+    echo -e "   -d          只探测文件的编码，别动手转换。[默认操作]"
+    echo -e "   -c          探测文件的编码并转换。"
+    echo -e "   -?, -h, -v  显示本帮助。"
+    echo
+    echo -e "本工具版本为'${VERSION}'。可向<dickeny@gmail.com>提交BUG。"
+    exit 0
+}
+
+get_codec(){
+    for _codec in $CODECS
+    do
+        iconv -f "$_codec" -t "${TARGET}" "$1" &> /dev/null && break
+    done
+    [ $? -ne 0 ] && echo "UNKNOWN" || echo "$_codec"
+}
+
+# 处理参数
+[ $# -eq 0 ] && usage
+
+while getopts "f:t:cdh?v" OPT; do
+    case "$OPT" in
+        f)  CODECS="$OPTARG $CODECS";;
+        t)  TARGET="$OPTARG";;
+        d)  ACTION="detect";;
+        c)  ACTION="convert";;
+        h|?|v)  usage;;
+        *)  usage;;
+    esac
+done
+shift $(($OPTIND - 1))
+
+LEN="$((for i in "$@"; do echo "$i" ; done) | wc -L)"
+
+# 处理每个文件
+for f in "$@"
+do
+    codec=$(get_codec "$f")
+    gbk=$(echo "$f"|iconv -f utf8 -t gbk)
+    printf "[%-7s] %-${LEN}s" "$codec" "$gbk" | iconv -f gbk -t utf8
+    [ "$ACTION" != "convert" ] && echo && continue
+
+    # do convert the files
+    echo -en " : "
+    test "$codec" = "${TARGET}" -o "$codec" = "UNKNOWN" && echo "Skip." && continue
+    name="$(basename "$f")"
+    temp="$(mktemp -u ".$name.XXXX")"
+    iconv -f "$codec" -t "${TARGET}" "$f" > "$temp" && mv "$temp" "$f" && echo "done." || echo "Not converted."
+done
+
+
