@@ -1,0 +1,30 @@
+[user]
+    name = 沈觅仁
+    email = dickeny@gmail.com
+[color]
+    diff = auto
+    status = auto
+    branch = auto
+    ui = auto
+    pager = true
+[alias]
+    co = checkout
+    ci = commit
+    rb = svn rebase
+    st = status
+    br = branch
+    bs = bisect
+    ls = ls-files
+    lc = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
+    lg = log --graph
+    rollback = reset --hard
+    main = checkout master
+    tar = archive -v --format=tar
+    history = show-branch
+    his = show-branch
+    zip = archive -v --format=zip
+    w = whatchanged
+[core]
+    quotepath = false
+[apply]
+    whitespace = fix
