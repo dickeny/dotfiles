@@ -95,6 +95,13 @@ if has("gui_running")
     map! <S-Insert> <MiddleMouse>
 endif
 
+" 其他
+" ==============================================================
+autocmd BufReadPost *
+     \ if line("'\"") > 0 && line("'\"") <= line("$") |
+     \ exe "normal g`\"" |
+     \ endif
+
 " 快捷键绑定
 runtime! extra/shortcuts_extra.vim
 " 源代码Tag操作等

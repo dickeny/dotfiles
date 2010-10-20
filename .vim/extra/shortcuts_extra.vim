@@ -28,4 +28,9 @@ nmap <Leader>j <C-T>
 imap zsj <c-r>=strftime("20%y-%m-%d %H:%M:%S")<cr>
 imap zrq <c-r>=strftime("20%y-%m-%d")<cr>
 
+" 窗口间跳转
+nmap <C-h> <C-W>h
+nmap <C-j> <C-W>j
+nmap <C-k> <C-W>k
+nmap <C-l> <C-W>l
 
