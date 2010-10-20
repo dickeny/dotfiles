@@ -1,0 +1,8 @@
+要安装某个vimball，请：
+    1. 使用vim打开该文件，如：
+        $ vim mark.vba.gz
+    2. 使用 :UseVimball 命令安装：
+    3. 搞定。
+
+要卸载，请打开该文件，然后执行 :RmVimball 命令。
+
