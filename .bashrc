@@ -31,10 +31,11 @@ unset use_color safe_term match_lhs
 
 #      =============== configure from user =========================
 # =======================================================================
-export PATH=$PATH:/opt/java/jre/bin/:~/bin/
+export PATH=~/local/bin/:~/bin/:$PATH:/opt/java/jre/bin/
 export PYTHONDOCS=/usr/share/doc/python/html/
 export VISUAL="vim"
 export EDITOR="vim"
+export LANG="zh_CN.UTF-8"
 #export _JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=lcd'
 
 # fix the io-charset problem with zip
@@ -84,15 +85,29 @@ alias y='yaourt'
 alias scr='screen -D -RR'
 alias iomon="iotop -bo | grep -v DISK | awk '\$4 > 100 || \$6 > 100{print}\'"
 alias msgstat='msgfmt -cvv --check-accelerators=\& -o /dev/null'
+alias qzrestart='(QPATH=$HOME/qzhttp/bin; cd $QPATH; sudo $QPATH/admin.sh restart)'
+alias rsync_mysite_without_settings='rsync root@172.25.32.73#36000:/home/dantezhu/release/dgwww/mysite/* . -r --progress --exclude "settings.py"'
 
-# Colorful Promt 
-# =======================================================================
+# Colorful Promt
+#================================================
+NONE='\[\e[00m\]'
+RED='\[\e[31m\]'
+GREEN='\[\e[32m\]'
+YELLOW='\[\e[33m\]'
+PURPLE='\[\e[34m\]'
+BLUE='\[\e[36m\]'
+bRED='\[\e[01;31m\]'
+bYELLOW='\[\e[01;33m\]'
+bPURPLE='\[\e[01;34m\]'
+bBLUE='\[\e[01;36m\]'
+
 ps_val(){
     val=$?
     test "$val" != "0" && echo "($val)"
 }
-
 ps_git(){
+    which git
+    test $? && return
     bra=`git branch 2>/dev/null | sed -n '/^* /s/^* //p'`
     if [ "x$bra" != "x" ]; then
         mod=":`git status 2> /dev/null | grep -c 'modified:   '`"
@@ -100,19 +115,8 @@ ps_git(){
     fi
 }
 
-ps_ps(){
-    if [[ ${EUID} == 0 ]] || [[ "$(hostname)" != "laptop" ]] ; then
-        PS_ABC='\[\e[36m\]\u\[\e[0m\]@\[\e[01;31m\]\h\[\e[01;34m\]: \W'
-    else
-        PS_ABC='\[\e[32m\]\t\[\e[35m\] \W'
-    fi
-    PS_VAL='\[\e[31;1m\]`ps_val`\[\e[0m\]'
-    PS_GIT='\[\e[33;1m\]`ps_git`\[\e[0m\]'
-    PS_XYZ='\[\e[01;36m\] \$\[\e[00m\] '
-    echo "$PS_VAL$PS_ABC$PS_GIT$PS_XYZ"
-}
+export PS1="${bRED}\`ps_val\`${BLUE}\u${bPURPLE}|${YELLOW}\W ${bYELLOW}\`ps_git\`${bBLUE}\$ ${NONE}"
 
-export PS1="`ps_ps`"
 
 # Settings for Arch Linux
 # =======================================================================
@@ -126,7 +130,6 @@ if [ $? -eq 0 ] ; then
     if [ "$(type -p powerpill)" ] ; then
         alias pacman='powerpill'
     fi
-        
     alias pms='pacman -S'
     alias pmss='pacman -Ss'
     alias pmsi='pacman -Si'
@@ -135,6 +138,16 @@ if [ $? -eq 0 ] ; then
     alias pmqi='pacman -Qi'
     alias pmu='pacman -U'
     alias cfg='find /etc -name "*.pacnew" -or -name "*.pacold"'
+
+    function v() {
+        CMD="/usr/bin/vim"
+        if [[ ! -z "$1" ]] ; then
+            NEW=$(echo "$1" | sed -n 's@^/etc/@@p')
+            [ ! -z "$NEW" ] && CMD="sudo $CMD"
+        fi
+        $CMD $@
+    }
+
 fi
 
 # Functions
@@ -168,14 +181,5 @@ cscopefull() {
     test $# -gt 1 && dir="$@" || dir=$PWD
     find $dir -name '*.h' -o -name '*.c' -o -name '*.cpp' -o -name '*.java' -o -name '*.cs' > cscope.files
     cscope -b
-}
-
-function v() {
-    CMD="/usr/bin/vim"
-    if [[ ! -z "$1" ]] ; then
-        NEW=$(echo "$1" | sed -n 's@^/etc/@@p')
-        [ ! -z "$NEW" ] && CMD="sudo $CMD"
-    fi
-    $CMD $@
 }
 
