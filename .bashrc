@@ -1,51 +1,29 @@
-#!/bin/bash
-#=============== configure from gentoo =========================
+
 if [[ $- != *i* ]] ; then
    return
 fi
 
-shopt -s checkwinsize
-shopt -s histappend
+[[ -f /etc/DIR_COLORS ]] && eval $(dircolors -b /etc/DIR_COLORS)
+[[ -f ~/.dir_colors   ]] && eval $(dircolors -b ~/.dir_colors)
+[[ -f ~/.functions    ]] && source ~/.functions
 
-use_color=true
-safe_term=${TERM//[^[:alnum:]]/?}   # sanitize TERM
-match_lhs=""
-[[ -f ~/.dir_colors   ]] && match_lhs="${match_lhs}$(<~/.dir_colors)"
-[[ -f /etc/DIR_COLORS ]] && match_lhs="${match_lhs}$(</etc/DIR_COLORS)"
-[[ -z ${match_lhs}    ]] \
-    && type -P dircolors >/dev/null \
-    && match_lhs=$(dircolors --print-database)
-[[ $'\n'${match_lhs} == *$'\n'"TERM "${safe_term}* ]] && use_color=true
-
-# Enable colors for ls, etc.  Prefer ~/.dir_colors #64489
-if type -P dircolors >/dev/null ; then
-    if [[ -f ~/.dir_colors ]] ; then
-        eval $(dircolors -b ~/.dir_colors)
-    elif [[ -f /etc/DIR_COLORS ]] ; then
-        eval $(dircolors -b /etc/DIR_COLORS)
-    fi
-fi
-
-# Try to keep environment pollution down, EPA loves us.
-unset use_color safe_term match_lhs
-
-#      =============== configure from user =========================
 # =======================================================================
 export PATH=~/local/bin/:~/bin/:$PATH:/opt/java/jre/bin/
 export PYTHONDOCS=/usr/share/doc/python/html/
 export VISUAL="vim"
 export EDITOR="vim"
 export LANG="zh_CN.UTF-8"
+#export LC_ALL="zh_CN.UTF-8"
 #export _JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=lcd'
 
 # fix the io-charset problem with zip
-export UNZIP="-O CP936"
-export ZIPINFO="-O CP936"
+#export UNZIP="-O CP936"
+#export ZIPINFO="-O CP936"
 
-[ -f ~/.functions ] && source ~/.functions
 
 # Alias Commands
 # =======================================================================
+alias v='vim'
 alias aria2c='aria2c --file-allocation=none --log-level=warn --summary-interval=0'
 
 # new set some common alias
@@ -62,7 +40,7 @@ alias grep='grep --colour=auto'
 alias gem='sudo gem'
 
 # this may help to make some secure on operation
-alias rm='rm -I'
+#alias rm='rm -I'
 
 # for some apps
 alias offscreen='xset dpms force off'
