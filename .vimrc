@@ -53,7 +53,7 @@ set autoindent                  " 开启自动对齐
 set cindent                     " 强制为C语言模式对齐
 set smartindent                 " 智能对齐方式
 set tags=tags;                  " 这个值会自动递归查找上级目录
-set autochdir
+"set autochdir
 
 " 开启文件类型探测，并加载插件，智能缩进（v模式下选中若干行，=键）
 filetype plugin indent on

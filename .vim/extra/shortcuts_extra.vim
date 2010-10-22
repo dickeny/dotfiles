@@ -2,7 +2,8 @@
 " ==============================================================
 
 " 使用空白键来进行代码折叠
-nnoremap <space> @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')<CR>
+"nnoremap <space> @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')<CR>
+vmap <space> <C-D>
 
 " Fn系列绑定
 " F3: 查找当前单词
@@ -29,8 +30,6 @@ imap zsj <c-r>=strftime("20%y-%m-%d %H:%M:%S")<cr>
 imap zrq <c-r>=strftime("20%y-%m-%d")<cr>
 
 " 窗口间跳转
-nmap <C-h> <C-W>h
-nmap <C-j> <C-W>j
-nmap <C-k> <C-W>k
-nmap <C-l> <C-W>l
+nmap <C-j> :bn<CR>
+nmap <C-l> :bp<CR>
 
