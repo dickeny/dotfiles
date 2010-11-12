@@ -39,9 +39,6 @@ alias grep='grep --colour=auto'
 # for ruby gem
 alias gem='sudo gem'
 
-# this may help to make some secure on operation
-#alias rm='rm -I'
-
 # for some apps
 alias offscreen='xset dpms force off'
 alias mplayer='mplayer -prefer-ipv6 '
@@ -84,22 +81,37 @@ ps_val(){
     test "$val" != "0" && echo "($val)"
 }
 ps_git(){
-    which git
-    test $? && return
-    bra=`git branch 2>/dev/null | sed -n '/^* /s/^* //p'`
-    if [ "x$bra" != "x" ]; then
-        mod=":`git status 2> /dev/null | grep -c 'modified:   '`"
-        echo "($bra$mod)"
+    if [ -d .svn ]; then
+        echo "(svn)"
+        return 0
+    fi
+    #if [ $(type -p hg) ]; then
+        #bra=`hg branch 2>/dev/null`
+        #if [ "x$bra" != "x" ]; then
+            #echo "(hg:$bra)"
+            #return 0
+        #fi
+    #fi
+
+    if [ $(type -p git) ]; then
+        bra=`git branch 2>/dev/null | sed -n '/^* /s/^* //p'`
+        if [ "x$bra" != "x" ]; then
+            mod=":`git status 2> /dev/null | grep -c 'modified:   '`"
+            echo "($bra$mod)"
+        fi
     fi
 }
 
-export PS1="${bRED}\`ps_val\`${BLUE}\u${bPURPLE}|${YELLOW}\W ${bYELLOW}\`ps_git\`${bBLUE}\$ ${NONE}"
+export PS1="${bRED}\`ps_val\`${BLUE}\u${bPURPLE}|${YELLOW}\W${bRED}\`ps_git\`${bBLUE} \$ ${NONE}"
 
 
 # Settings for Arch Linux
 # =======================================================================
-test -f /etc/issud && grep 'Arch Linux' /etc/issue -q
+test -f /etc/issue && grep 'Arch Linux' /etc/issue -q
 if [ $? -eq 0 ] ; then
+    # this may help to make some secure on operation
+    alias rm='rm -I'
+
     # for pacman
     alias pacman='sudo pacman'
     if [ "$(type -p pacman-color)" ] ; then
