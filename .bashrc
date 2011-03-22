@@ -11,6 +11,7 @@ fi
 [[ -f /etc/DIR_COLORS ]] && eval $(dircolors -b /etc/DIR_COLORS)
 [[ -f ~/.dir_colors   ]] && eval $(dircolors -b ~/.dir_colors)
 [[ -f ~/.functions    ]] && source ~/.functions
+[[ -f ~/.passwd       ]] && source ~/.passwd
 
 # =======================================================================
 export PATH=~/.local/bin/:~/bin/:$PATH:/opt/java/jre/bin/:/sbin/:/usr/sbin

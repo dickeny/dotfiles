@@ -88,13 +88,13 @@ function mlcmd {
 # To run this program, you need the nc (netcat) program
 # MLdonkey's default user is 'admin', no passwd.
 # If you do not set passwd, leave them empty.
-MLUSER=
-MLPASSWD=
+#MLUSER=
+#MLPASSWD=
 
 [ ! -z $MLUSER ] && AUTH_INFO="auth $MLUSER $MLPASSWD"
 [ "x$1" = "x" ] && echo "Usage: mlcmd help" && return $?
 
-nc 127.0.0.1 4000 <<_EOF
+netcat 127.0.0.1 4000 <<_EOF
 $AUTH_INFO
 $@
 q
