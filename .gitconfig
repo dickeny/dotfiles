@@ -26,5 +26,10 @@
     w = whatchanged
 [core]
     quotepath = false
+    excludesfile = ~/.gitignore
 [apply]
     whitespace = fix
+[branch "master"]
+    remote = origin
+
+
