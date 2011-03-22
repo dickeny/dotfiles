@@ -3,7 +3,7 @@
 
 " 使用空白键来进行代码折叠
 "nnoremap <space> @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')<CR>
-vmap <space> <C-D>
+nmap <space> <PageDown>
 
 " Fn系列绑定
 " F3: 查找当前单词
@@ -16,6 +16,7 @@ au FileType c       map <F5> :!gcc -Wall -g % -o %< && ./%<<CR>
 au FileType cpp     map <F5> :!g++ -Wall -g % -o %< && ./%<<CR>
 au FileType java    map <F5> :!javac % && java %<
 au FileType tcl     map <F5> :!ns %
+au FileType php     map <F5> :!php %
 au FileType ruby,python,sh map <F5> :!chmod a+x % && ./%
 map <F10> <ESC>:set wrap!<CR>
 
@@ -29,7 +30,7 @@ nmap <Leader>j <C-T>
 imap zsj <c-r>=strftime("20%y-%m-%d %H:%M:%S")<cr>
 imap zrq <c-r>=strftime("20%y-%m-%d")<cr>
 
-" 窗口间跳转
-nmap <C-j> :bn<CR>
-nmap <C-l> :bp<CR>
+nmap <C-h> :bp<CR>
+nmap <C-j> :bp<CR>
+nmap <C-l> :bn<CR>
 
