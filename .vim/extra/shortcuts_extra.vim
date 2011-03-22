@@ -2,8 +2,8 @@
 " ==============================================================
 
 " 使用空白键来进行代码折叠
-"nnoremap <space> @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')<CR>
-vmap <space> <C-D>
+" nnoremap <space> @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')<CR>
+nmap <space> <C-D>
 
 " Fn系列绑定
 " F3: 查找当前单词
@@ -16,8 +16,16 @@ au FileType c       map <F5> :!gcc -Wall -g % -o %< && ./%<<CR>
 au FileType cpp     map <F5> :!g++ -Wall -g % -o %< && ./%<<CR>
 au FileType java    map <F5> :!javac % && java %<
 au FileType tcl     map <F5> :!ns %
-au FileType ruby,python,sh map <F5> :!chmod a+x % && ./%
+au FileType ruby    map <F5> :!ruby %
+au FileType python  map <F5> :!python %
+au FileType sh      map <F5> :!chmod a+x % && ./%
+au FileType php     map <F5> :!php %
 map <F10> <ESC>:set wrap!<CR>
+
+augroup filetypedetect
+au BufNewFile,BufRead *.wiki setf Wikipedia
+augroup END
+
 
 " 查询当前单词
 nmap <C-q> :q<CR>
@@ -30,6 +38,8 @@ imap zsj <c-r>=strftime("20%y-%m-%d %H:%M:%S")<cr>
 imap zrq <c-r>=strftime("20%y-%m-%d")<cr>
 
 " 窗口间跳转
-nmap <C-j> :bn<CR>
-nmap <C-l> :bp<CR>
+nmap <C-h> :bp<CR>
+nmap <C-j> :bp<CR>
+nmap <C-k> :bn<CR>
+nmap <C-l> :bn<CR>
 

@@ -9,6 +9,7 @@ set nobackup                    " 不备份修改的文件
 let mapleader=","
 
 " 界面
+syntax on                       " 打开语法高亮
 set scrolloff=5                 " 总是让最下方至少显示5行
 set ruler                       " 总是显示光标状态栏
 set nu                          " 显示行号
@@ -48,7 +49,6 @@ set shiftwidth=4                " 换行时行间交错使用4个空格
 set softtabstop=4
 
 " 编程相关的设置
-syntax on                       " 打开语法高亮
 set showmatch                   " 启用括号匹配提示
 set autoindent                  " 开启自动对齐
 set cindent                     " 强制为C语言模式对齐
