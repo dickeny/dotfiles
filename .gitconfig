@@ -1,6 +1,6 @@
 [user]
-    name = 沈觅仁
-    email = dickeny@gmail.com
+    name = Rexliao
+    email = rexliao@tencent.com
 [color]
     diff = auto
     status = auto
@@ -26,5 +26,6 @@
     w = whatchanged
 [core]
     quotepath = false
+    pager = less -FXRS
 [apply]
     whitespace = fix
