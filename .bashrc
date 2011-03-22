@@ -1,3 +1,8 @@
+# Sample .bashrc for SuSE Linux
+# Copyright (c) SuSE GmbH Nuernberg
+
+test -s ~/.alias && . ~/.alias || true
+
 
 if [[ $- != *i* ]] ; then
    return
@@ -8,7 +13,7 @@ fi
 [[ -f ~/.functions    ]] && source ~/.functions
 
 # =======================================================================
-export PATH=~/local/bin/:~/bin/:$PATH:/opt/java/jre/bin/
+export PATH=~/.local/bin/:~/bin/:$PATH:/opt/java/jre/bin/:/sbin/:/usr/sbin
 export PYTHONDOCS=/usr/share/doc/python/html/
 export VISUAL="vim"
 export EDITOR="vim"
@@ -102,7 +107,7 @@ ps_git(){
     fi
 }
 
-export PS1="${bRED}\`ps_val\`${BLUE}\u${bPURPLE}|${YELLOW}\W${bRED}\`ps_git\`${bBLUE} \$ ${NONE}"
+export PS1="${bRED}\`ps_val\`${BLUE}\h${bPURPLE}|${YELLOW}\W${bRED}\`ps_git\`${bBLUE} \$ ${NONE}"
 
 
 # Settings for Arch Linux
@@ -128,20 +133,22 @@ if [ $? -eq 0 ] ; then
     alias pmqi='pacman -Qi'
     alias pmu='pacman -U'
     alias cfg='find /etc -name "*.pacnew" -or -name "*.pacold"'
-
-    function v() {
-        CMD="/usr/bin/vim"
-        if [[ ! -z "$1" ]] ; then
-            NEW=$(echo "$1" | sed -n 's@^/etc/@@p')
-            [ ! -z "$NEW" ] && CMD="sudo $CMD"
-        fi
-        $CMD $@
-    }
-
+    alias v=_v
+    alias banjuan='ssh banjuan.net'
+    alias kk='konqueror'
+    alias ff='firefox'
 fi
 
 # Functions
 # =======================================================================
+function _v() {
+    CMD="/usr/bin/vim"
+    if [[ ! -z "$1" ]] ; then
+        NEW=$(echo "$1" | sed -n 's@^/etc/@@p')
+        [ ! -z "$NEW" ] && CMD="sudo $CMD"
+    fi
+    $CMD $@
+}
 # ex - archive extractor
 # usage: ex <file>
 ex ()
@@ -173,3 +180,13 @@ cscopefull() {
     cscope -b
 }
 
+test -f $HOME/.xprofile && source $HOME/.xprofile || true
+### chsdir start ###
+if [ -f $HOME/bin/chs_completion ]; then
+    #export CHSDIR="{'n':'l'}"
+    PATH=$PATH:$HOME/bin
+    source $HOME/bin/chs_completion
+    complete -o filenames -F _filedir_xspec file
+fi
+### chsdir finish. ###
+export PATH=${PATH/.:/}
