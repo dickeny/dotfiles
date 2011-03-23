@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# 总是忘记svn如何回滚，干脆写个脚本记下来。。。
+
+[ $# -ne 2 ] && echo "$(basename $0) VERSION PATH" && exit
+
+set -x
+svn merge -r HEAD:$1 "$2"
+set +x
+
