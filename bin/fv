@@ -1,0 +1,77 @@
+#!/bin/sh
+
+# another brief wrapper for vim
+# just use 'fv file', and it will show all *file* to choose
+
+function DEBUG()
+{
+    if [[ "${SH_DEBUG_FLAG}" == "yes" || "${SH_DEBUG_FLAG}" == "YES" ]]; then
+        echo $*
+    fi
+}
+
+if [ "$#" -ne "1" ]; then
+    DEBUG argnum: $# argsList: $*
+    exit 1
+fi
+
+VIM=/usr/vim/bin/vim
+
+#file=$(find $(pwd) -name "*$1*" | grep -v "\.svn")
+file=$(find * -name "*$1*" | grep -v "\.svn")
+
+if [[ "${file}"x == x ]]; then
+    DEBUG "Can't find $1."
+    exit 2
+fi
+
+if [[ -e "${file}" ]]; then
+    ${VIM} ${file}
+    exit 0 # good
+fi
+
+num=1
+
+newfiles=""
+
+for f in ${file}
+do
+    if [[ "$(file ${f} | grep "text\>" | wc -l)" -eq 0 ]]; then
+        continue;
+    fi
+    echo "${num}. $f"
+    newfiles=$(echo "${newfiles} ${f}")
+    ((num++))
+done
+
+if ((${num}==2)); then
+    ${VIM} ${newfiles}
+    exit 0 #good
+fi
+
+echo "----------------------------------------------------------------"
+echo -n "??? Which file to view(0 to Quit):"
+
+read fileindex
+
+if [[ "${fileindex}" =~ "[^0-9]+" ]]; then
+    echo "\"${fileindex}\" is a error number! "
+    exit 3
+fi
+
+if ((${fileindex}==0)); then
+    echo Bye...
+    exit 0
+fi
+
+num=1
+for f in ${file}
+do
+    if ((${num}==${fileindex})); then
+        ${VIM} ${f}
+        exit 0
+    fi
+    ((num++))
+done
+#echo "Bye! And have funny! "
+

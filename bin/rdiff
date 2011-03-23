@@ -1,0 +1,32 @@
+#!/bin/bash
+
+[ $# -lt 2 ] && echo "$(basename $0) DIR1 DIR2" && exit 1
+
+DIR1=${1}
+DIR2=${2}
+
+LIST=$(find "$DIR1" -path '*/.svn' -prune -o -type f -not -name 'settings.py' -print)
+
+for f in $LIST ; do
+    if [ "${f/.gz}" != "${f}" ] ; then
+        DIFF=zdiff
+    else
+        DIFF=diff
+    fi
+
+    f2=$(echo $f | sed "s@$DIR1@$DIR2@")
+    if [ -f "$f2" ] ; then
+        if [ "x$($DIFF -q "$f" "$f2")" != "x" ] ; then
+            if [ "$3" = "-q" ] ; then
+                test $? && diff "$f" "$f2" -q
+            else
+                test $? && vimdiff "$f" "$f2"
+            fi
+        fi
+    else
+        echo "+ $f"
+    fi
+done
+
+
+

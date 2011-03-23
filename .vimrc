@@ -14,7 +14,7 @@ set scrolloff=5                 " 总是让最下方至少显示5行
 set ruler                       " 总是显示光标状态栏
 set nu                          " 显示行号
 "set cursorline                 " 醒目显示当前行
-colorscheme koehler               " 这个主题比较不错
+
 " 状态栏相关的设置
 set statusline=[%F]%y%r%m%*%=[Line:%l/%L,Column:%c][%p%%]
 set laststatus=2                " 总是显示状态栏
@@ -24,6 +24,7 @@ set listchars=tab:>-,trail:-
 " 设置编辑器的一些默认参数
 set nowrap
 "set linebreak                   " 整词换行（对中文支持不好）
+set nowrap
 set whichwrap=b,s,<,>,[,]       " 光标从行首和行末时可以跳到另一行去
 set hidden                      " 没有保存的缓冲区可以自动被隐藏
 set fileencodings=utf-8,chinese,gb18030,cp936,usc-bom
@@ -67,14 +68,14 @@ set foldlevel=100               " 默认不折叠代码（依然可手动 zc 折
 " 打印设置（命令:ha 或 :ha > out.ps），也可以试试输出为Html :TOhtml
 if (!has("win32"))
     "encoding of printing. use encoding if not set.
-    set printencoding=utf-8
+    "set printencoding=utf-8
     "charset of print. should be compatible with printencoding.
     "set printmbcharset=ISO10646
     "打印所用字体, 在linux下, 要用ghostscript里已有的字体, 不然会打印乱码.
-    set printmbfont=r:ZhunYuan-Regular,c:yes
+    "set printmbfont=r:ZhunYuan-Regular,c:yes
     "打印可选项, formfeed: 是否处理换页符, header: 页眉大小, paper: 用何种
     "纸, duplex: 是否双面打印, syntax: 是否支持语法高
-    set printoptions=formfeed:y,paper:A4,duplex:on,syntax:y",header:3
+    "set printoptions=formfeed:y,paper:A4,duplex:on,syntax:y",header:3
     "打印时页眉的格式
     "set printheader=%<%f%h%m%=Page\ %N
 else
@@ -117,3 +118,6 @@ runtime! extra/tags_extra.vim
 " 插件设置
 runtime! extra/plugins_extra.vim
 
+"set t_Co=256
+"color rouruan                   " 浅灰柔软色
+color koehler

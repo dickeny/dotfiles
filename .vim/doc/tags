@@ -138,6 +138,16 @@ AN	alternate.txt	/*AN*
 AS	alternate.txt	/*AS*
 AT	alternate.txt	/*AT*
 AV	alternate.txt	/*AV*
+EnhComm-Bugs	EnhancedCommentify.txt	/*EnhComm-Bugs*
+EnhComm-Credits	EnhancedCommentify.txt	/*EnhComm-Credits*
+EnhComm-EnhCommentify	EnhancedCommentify.txt	/*EnhComm-EnhCommentify*
+EnhComm-Fallbacks	EnhancedCommentify.txt	/*EnhComm-Fallbacks*
+EnhComm-Keybindings	EnhancedCommentify.txt	/*EnhComm-Keybindings*
+EnhComm-NewLanguages	EnhancedCommentify.txt	/*EnhComm-NewLanguages*
+EnhComm-Options	EnhancedCommentify.txt	/*EnhComm-Options*
+EnhComm-Support	EnhancedCommentify.txt	/*EnhComm-Support*
+EnhancedCommentify	EnhancedCommentify.txt	/*EnhancedCommentify*
+EnhancedCommentify()	EnhancedCommentify.txt	/*EnhancedCommentify()*
 ExtractSnips()	snipMate.txt	/*ExtractSnips()*
 ExtractSnipsFile()	snipMate.txt	/*ExtractSnipsFile()*
 Filename()	snipMate.txt	/*Filename()*
@@ -507,3 +517,8 @@ workspace-intro	workspace.txt	/*workspace-intro*
 workspace-keys	workspace.txt	/*workspace-keys*
 workspace-using	workspace.txt	/*workspace-using*
 workspace.txt	workspace.txt	/*workspace.txt*
+xml-plugin-callbacks	xml-plugin.txt	/*xml-plugin-callbacks*
+xml-plugin-html	xml-plugin.txt	/*xml-plugin-html*
+xml-plugin-mappings	xml-plugin.txt	/*xml-plugin-mappings*
+xml-plugin-settings	xml-plugin.txt	/*xml-plugin-settings*
+xml-plugin.txt	xml-plugin.txt	/*xml-plugin.txt*

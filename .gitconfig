@@ -26,6 +26,7 @@
     w = whatchanged
 [core]
     quotepath = false
+    pager = less -FXRS
     excludesfile = ~/.gitignore
 [apply]
     whitespace = fix
