@@ -1,0 +1,2 @@
+mark-2.3.3.vba: call delete('/data/home/rexliao/.vim/autoload/mark.vim')|call delete('/data/home/rexliao/.vim/plugin/mark.vim')|call delete('/data/home/rexliao/.vim/doc/mark.txt')
+mark.vba: call delete('/data/home/rexliao/.vim/autoload/mark.vim')|call delete('/data/home/rexliao/.vim/plugin/mark.vim')|call delete('/data/home/rexliao/.vim/doc/mark.txt')
