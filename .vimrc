@@ -22,11 +22,12 @@ set list
 set listchars=tab:>-,trail:-
 
 " 设置编辑器的一些默认参数
+set nowrap
 "set linebreak                   " 整词换行（对中文支持不好）
 set nowrap
 set whichwrap=b,s,<,>,[,]       " 光标从行首和行末时可以跳到另一行去
 set hidden                      " 没有保存的缓冲区可以自动被隐藏
-set fileencodings=usc-bom,utf-8,chinese,gb18030,cp936
+set fileencodings=utf-8,chinese,gb18030,cp936,usc-bom
 
 " 查找功能（按/键开始查找)
 set ignorecase                  " 不区分大小写
@@ -54,7 +55,7 @@ set autoindent                  " 开启自动对齐
 set cindent                     " 强制为C语言模式对齐
 set smartindent                 " 智能对齐方式
 set tags=tags;                  " 这个值会自动递归查找上级目录
-"set autochdir
+set autochdir
 
 " 开启文件类型探测，并加载插件，智能缩进（v模式下选中若干行，=键）
 filetype plugin indent on
@@ -82,6 +83,13 @@ else
 endif
 
 "let do_syntax_sel_menu = 1
+"
+" Konsole 光表样式设置
+" ==============================================================
+if &term =~ "xterm"
+    let &t_SI = "\<Esc>]50;CursorShape=1\x7"
+    let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+endif
 
 " GVIM配置
 " ==============================================================

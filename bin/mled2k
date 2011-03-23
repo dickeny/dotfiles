@@ -1,0 +1,38 @@
+#!/bin/sh
+
+# A script for adding ed2k links to MLdonkey from Opera browser.
+# Based on 'mldonkey_command'
+# To run this program, you need the nc (netcat) program
+# by vvoody - visit http://bbs.operachina.com/viewforum.php?f=72 for more.
+
+MLDONKEY_IP=127.0.0.1
+MLDONKEY_PORT=4000
+
+# MLdonkey's default user is 'admin', no passwd.
+# If you do not set passwd, leave them empty.
+#MLUSER=
+#MLPASSWD=
+[[ -f ~/.passwd ]] && source ~/.passwd
+
+echo "$@" >> /tmp/ml.log
+
+[ ! -z $MLUSER ] && AUTH_INFO="auth $MLUSER $MLPASSWD"
+[ "x$1" = "x" ] && echo "Usage: $(basename $0) 'ed2k_link'" && exit $?
+
+netcat $MLDONKEY_IP $MLDONKEY_PORT > /dev/null <<EOF
+$AUTH_INFO
+dllink "$1"
+q
+EOF
+
+# Popup tips for KDE4 desktop
+[[ -z "$(pidof kdeinit4)" ]] && exit 0
+[[ -z "$(type -p kdialog)" ]] && exit 0
+[[ ! -x $HOME/bin/unescape ]] && exit 0
+
+test "$DISPLAY" | export `cat "/proc/$(pidof kdeinit4)/environ" | tr '\0' '\n' | grep DISPLAY` >/dev/null
+message="已添加：$( "$HOME/bin/unescape" "$1" | cut -d'|' -f3)"
+if [[ "$DISPLAY" != "" ]]; then
+    kdialog --passivepopup "$message" --title "新添MLdonkey下载" 10
+fi
+

@@ -1,6 +1,6 @@
 [user]
-    name = Rexliao
-    email = rexliao@tencent.com
+    name = 沈觅仁
+    email = dickeny@gmail.com
 [color]
     diff = auto
     status = auto
@@ -27,5 +27,10 @@
 [core]
     quotepath = false
     pager = less -FXRS
+    excludesfile = ~/.gitignore
 [apply]
     whitespace = fix
+[branch "master"]
+    remote = origin
+
+
